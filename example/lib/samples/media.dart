@@ -17,7 +17,10 @@ class MediaState extends State<Media> {
         title: const Text('Media example'),
       ),
       body: DashChat(
+        messageOptions: const MessageOptions(),
+        inputOptions: const InputOptions(),
         currentUser: user,
+        readOnly: true,
         onSend: (ChatMessage m) {
           setState(() {
             messages.insert(0, m);
