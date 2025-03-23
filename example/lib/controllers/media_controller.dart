@@ -24,10 +24,11 @@ class MediaController extends GetxController {
       currentChatMessage.value = ChatMessage(
         user: currentUser.value,
         createdAt: DateTime.now(),
-        medias: [media],
+        medias: [media].obs,
       );
     } else {
       currentChatMessage.value!.medias?.add(media);
+      currentChatMessage.refresh();
     }
   }
 
@@ -59,5 +60,20 @@ class MediaController extends GetxController {
         createdAt: DateTime.now(),
       ));
     }
+  }
+
+  void removeMedia(int index) {
+    if (currentChatMessage.value?.medias != null) {
+      currentChatMessage.value!.medias!.removeAt(index);
+      if (currentChatMessage.value!.medias!.isEmpty) {
+        currentChatMessage.value = null;
+      } else {
+        currentChatMessage.refresh();
+      }
+    }
+  }
+
+  void clearMedia() {
+    currentChatMessage.value = null;
   }
 }

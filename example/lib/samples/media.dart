@@ -5,6 +5,7 @@ import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:chat_input/chat_input.dart';
 import '../controllers/media_controller.dart';
+import '../widgets/media_preview.dart';
 
 class Media extends StatelessWidget {
   final MediaController controller = Get.put(MediaController());
@@ -29,6 +30,7 @@ class Media extends StatelessWidget {
                   messages: controller.messages.value,
                 )),
           ),
+          MediaPreview(controller: controller),
           InputWidget(
             onSendAudio: (audioFile, duration) {
               controller.sendAudio(audioFile.path, duration);
