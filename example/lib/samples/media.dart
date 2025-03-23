@@ -6,6 +6,7 @@ import 'package:image_picker/image_picker.dart';
 import 'package:chat_input/chat_input.dart';
 import '../controllers/media_controller.dart';
 import '../widgets/media_preview.dart';
+import '../widgets/media_selection_sheet.dart';
 
 class Media extends StatelessWidget {
   final MediaController controller = Get.put(MediaController());
@@ -38,9 +39,12 @@ class Media extends StatelessWidget {
             onSendText: (text) {
               controller.sendText(text);
             },
-            onAttachmentClick: () async {
-              final ImagePicker picker = ImagePicker();
-              // Handle image picking here
+            onAttachmentClick: () {
+              showModalBottomSheet(
+                context: context,
+                builder: (context) =>
+                    MediaSelectionSheet(controller: controller),
+              );
             },
           ),
         ],

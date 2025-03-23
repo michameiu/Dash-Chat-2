@@ -19,7 +19,7 @@ class MediaController extends GetxController {
     messages.insert(0, message);
   }
 
-  void _addMediaToCurrentMessage(ChatMedia media) {
+  void addMediaToCurrentMessage(ChatMedia media) {
     if (currentChatMessage.value == null) {
       currentChatMessage.value = ChatMessage(
         user: currentUser.value,
@@ -42,7 +42,7 @@ class MediaController extends GetxController {
       fileName: fileName,
       customProperties: {'duration': duration.inMilliseconds},
     );
-    _addMediaToCurrentMessage(media);
+    addMediaToCurrentMessage(media);
   }
 
   void sendText(String text) {
