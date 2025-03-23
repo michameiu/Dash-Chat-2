@@ -40,6 +40,14 @@
 - Typing users
 - Reply to messages - WIP
 - Message status - WIP
+- Advanced media features:
+  - Image capture from camera
+  - Video recording
+  - Audio recording
+  - Media preview
+  - Multiple media attachments per message
+  - Media selection sheet
+  - Permission handling for camera and storage
 
 You need another feature? you can use the `customProperties` field of the models, it allows you to pass other data to the library that you can then use inside custom builders to implement any feature you need.
 
@@ -91,6 +99,44 @@ class _BasicState extends State<Basic> {
 }
 ```
 
+## Media Usage
+
+```dart
+import 'package:dash_chat_2/dash_chat_2.dart';
+import 'package:flutter/material.dart';
+
+class MediaExample extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text('Media Example'),
+      ),
+      body: DashChatMedia(
+        currentUser: user,
+        onMessage: (ChatMessage message) {
+          print('New message: ${message.text}');
+          if (message.medias != null) {
+            print('Media count: ${message.medias!.length}');
+          }
+        },
+        messageOptions: const MessageOptions(
+          currentUserContainerColor: Colors.blue,
+          containerColor: Colors.grey,
+        ),
+        inputOptions: const InputOptions(
+          inputTextStyle: TextStyle(color: Colors.black),
+          inputDecoration: InputDecoration(
+            hintText: 'Type a message...',
+            border: OutlineInputBorder(),
+          ),
+        ),
+      ),
+    );
+  }
+}
+```
+
 You can run the [example](example) project to see more complex ways of using the package
 
 ## Parameters of DashChat
@@ -114,6 +160,18 @@ You can run the [example](example) project to see more complex ways of using the
 - <span style="color:#24292E; background-color:#F3F4F4; padding: .2em .4em;; border-radius: 6px;">readOnly</span> - <span style="color:#FFB23F">optional</span> (default to false): Option to make the chat read only, it will hide the input field
 
 - <span style="color:#24292E; background-color:#F3F4F4; padding: .2em .4em;; border-radius: 6px;">List<<a href="https://pub.dev/documentation/dash_chat_2/latest/dash_chat_2/ChatUser-class.html">ChatUser</a>> typingUsers</span> - <span style="color:#FFB23F">optional</span>: List of users currently typing in the chat
+
+## Parameters of DashChatMedia
+
+- <span style="color:#24292E; background-color:#F3F4F4; padding: .2em .4em;; border-radius: 6px;">Function(ChatMessage message) onMessage</span> - <span style="color:#FF3F3F">required</span>: Callback function when a message is sent
+
+- <span style="color:#24292E; background-color:#F3F4F4; padding: .2em .4em;; border-radius: 6px;">ChatUser currentUser</span> - <span style="color:#FF3F3F">required</span>: The current user of the chat
+
+- <span style="color:#24292E; background-color:#F3F4F4; padding: .2em .4em;; border-radius: 6px;">bool readOnly</span> - <span style="color:#FFB23F">optional</span> (default to false): Whether the chat is read-only
+
+- <span style="color:#24292E; background-color:#F3F4F4; padding: .2em .4em;; border-radius: 6px;">MessageOptions? messageOptions</span> - <span style="color:#FFB23F">optional</span>: Options to customize the appearance of messages
+
+- <span style="color:#24292E; background-color:#F3F4F4; padding: .2em .4em;; border-radius: 6px;">InputOptions? inputOptions</span> - <span style="color:#FFB23F">optional</span>: Options to customize the appearance of the input field
 
 ## Full documentation
 

@@ -1,6 +1,7 @@
 import 'package:examples/samples/avatar.dart';
 import 'package:examples/samples/basic.dart';
 import 'package:examples/samples/media.dart';
+import 'package:examples/samples/media_example.dart';
 import 'package:examples/samples/mention.dart';
 import 'package:examples/samples/quick_replies_sample.dart';
 import 'package:examples/samples/send_on_enter.dart';
@@ -48,7 +49,11 @@ class MyHomePageState extends State<MyHomePage> {
             ),
             ElevatedButton(
               onPressed: () => push(Media()),
-              child: const Text('Chat media'),
+              child: const Text('Chat media (old)'),
+            ),
+            ElevatedButton(
+              onPressed: () => push(MediaExample()),
+              child: const Text('Chat media (new)'),
             ),
             ElevatedButton(
               onPressed: () => push(AvatarSample()),
