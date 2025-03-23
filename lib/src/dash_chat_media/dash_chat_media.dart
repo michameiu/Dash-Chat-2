@@ -30,7 +30,7 @@ class DashChatMedia extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final controller = Get.put(MediaController());
+    MediaController controller = Get.find();
     controller.currentUser.value = currentUser;
 
     return Column(
