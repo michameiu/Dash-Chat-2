@@ -1,5 +1,5 @@
 name: examples
-description: A new Flutter project.
+description: Examples for dash_chat_2
 
 # The following line prevents the package from being accidentally published to
 # pub.dev using `pub publish`. This is preferred for private packages.
@@ -21,18 +21,19 @@ environment:
   sdk: ">=2.12.0 <3.0.0"
 
 dependencies:
-  dash_chat_2:
-    path: ../
   flutter:
     sdk: flutter
+  dash_chat_2:
+    path: ../
+  get: ^4.6.6
+  image_picker: ^0.8.9
+  chat_input: ^0.0.6
 
 dependency_overrides:
-  intl: ^0.19.0
-  get: ^4.6.6
-  win32: ^5.5.4
+  win32: 5.5.4
 
 dev_dependencies:
-  flutter_lints: ^2.0.1
+  flutter_lints: ^2.0.0
   flutter_test:
     sdk: flutter
 
