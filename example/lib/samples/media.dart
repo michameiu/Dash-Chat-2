@@ -26,7 +26,7 @@ class Media extends StatelessWidget {
                   onSend: (ChatMessage m) {
                     controller.addMessage(m);
                   },
-                  messages: controller.messages,
+                  messages: controller.messages.value,
                 )),
           ),
           InputWidget(

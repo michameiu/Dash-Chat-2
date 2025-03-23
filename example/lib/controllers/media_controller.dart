@@ -34,11 +34,12 @@ class MediaController extends GetxController {
   void sendAudio(String path, Duration duration) {
     if (!isInitialized.value || currentUser.value == null) return;
 
+    final fileName = path.split('/').last;
     final media = ChatMedia(
-      type: MediaType.file,
+      type: MediaType.audio,
       url: path,
-      fileName: 'voice_note.mp3',
-      customProperties: {'isAudio': true, 'duration': duration.inMilliseconds},
+      fileName: fileName,
+      customProperties: {'duration': duration.inMilliseconds},
     );
     _addMediaToCurrentMessage(media);
   }

@@ -1,0 +1,27 @@
+{
+    "rules": {
+        "state_management": {
+            "framework": "getx",
+            "patterns": [
+                "Use GetX controllers for state management",
+                "Use .obs for reactive variables",
+                "Use GetX widgets (Obx, GetX, GetBuilder) for reactive UI",
+                "Use Get.put() for dependency injection",
+                "Use Get.to() for navigation",
+                "Use Get.snackbar() for notifications"
+            ],
+            "naming_conventions": {
+                "controllers": "Controller suffix (e.g., ChatController)",
+                "variables": "Use camelCase for private variables",
+                "getters": "Use get keyword for getters",
+                "setters": "Use set keyword for setters"
+            }
+        },
+        "file_structure": {
+            "controllers": "Keep controllers in the same directory as their respective widgets",
+            "views": "lib/views/",
+            "models": "lib/models/",
+            "routes": "lib/routes/"
+        }
+    }
+}

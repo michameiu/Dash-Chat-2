@@ -18,11 +18,10 @@
       }
     },
     "file_structure": {
-      "controllers": "lib/controllers/",
+      "controllers": "lib/src/widgets/",
       "views": "lib/views/",
       "models": "lib/models/",
-      "bindings": "lib/bindings/",
       "routes": "lib/routes/"
     }
   }
-} 
+}
