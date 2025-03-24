@@ -67,14 +67,20 @@ class DashChatMedia extends StatelessWidget {
                 messageTextBuilder: (ChatMessage message,
                     ChatMessage? previousMessage, ChatMessage? nextMessage) {
                   if (message.input != null) {
+                    // return Text(message.text ?? '');
                     return MessageInputWidget(
-                      input: message.input!,
+                      message: message,
                       onConfirm: (selected) {
                         message.input = ChatMessageInput(
                           options: message.input!.options,
                           type: message.input!.type,
                           selected: selected,
+                          isConfirmed: true,
                         );
+                        var inputController =
+                            Get.find<InputController>(tag: message.uuid);
+                        // inputController.confirmInput();
+                        print('message: ${message.toJson()}');
                         controller.messages.refresh();
                       },
                     );
@@ -110,8 +116,8 @@ class DashChatMedia extends StatelessWidget {
               currentUser: controller.currentUser.value!,
               readOnly: readOnly,
               onSend: (ChatMessage m) {
-                controller.addMessage(m);
-                onMessage(m);
+                print('onSend11: $onMessage');
+                // controller.addMessage(m, onSendMessage: onMessage);
               },
               messages: controller.messages.value,
             );
@@ -123,7 +129,7 @@ class DashChatMedia extends StatelessWidget {
             controller.sendAudio(audioFile.path, duration);
           },
           onSendText: (text) {
-            controller.sendText(text);
+            controller.sendText(text, onSendMessage: onMessage);
           },
           onAttachmentClick: () {
             showModalBottomSheet(

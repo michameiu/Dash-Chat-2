@@ -19,6 +19,7 @@ class InputController extends GetxController {
   }
 
   void confirmInput() {
+    print("DONEONEONOEN");
     isConfirmed.value = true;
   }
 

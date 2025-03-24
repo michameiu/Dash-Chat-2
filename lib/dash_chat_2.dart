@@ -1,6 +1,8 @@
 library dash_chat_2;
 
 import 'dart:math';
+import 'package:get/get.dart';
+import 'package:uuid/uuid.dart';
 
 import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/gestures.dart';

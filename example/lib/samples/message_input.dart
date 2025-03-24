@@ -12,12 +12,13 @@ class MessageInputSample extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Message Input Example'),
+        title: const Text('Message Input1 Example'),
       ),
       body: Column(
         children: [
           Expanded(
             child: Obx(() {
+              // return Text("data");
               return DashChatMedia(
                 messageOptions: MessageOptions(
                   currentUserContainerColor: Colors.blue,
@@ -44,13 +45,14 @@ class MessageInputSample extends StatelessWidget {
                   inputMaxLines: 5,
                 ),
                 currentUser: controller.currentUser.value!,
-                readOnly: false,
+                readOnly: true,
                 onMessage: (ChatMessage m) {
+                  print("WHello");
                   m.input = ChatMessageInput(
                     options: ['leaks', 'functionality'],
                     type: ChatMessageInputType.checkbox,
                   );
-                  controller.addMessage(m);
+                  controller.addFinalMessage(m);
                 },
               );
             }),

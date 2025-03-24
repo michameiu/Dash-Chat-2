@@ -12,6 +12,8 @@ class ChatMessageInput {
   final int? min;
   final int? max;
   final int? value;
+  bool isConfirmed;
+  late final String uuid;
 
   ChatMessageInput({
     required this.options,
@@ -19,8 +21,12 @@ class ChatMessageInput {
     required this.type,
     this.min,
     this.max,
+    this.isConfirmed = false,
     this.value,
-  });
+    String? uuid,
+  }) {
+    this.uuid = uuid ?? Uuid().v4();
+  }
 
   Map<String, dynamic> toJson() {
     return {
@@ -30,6 +36,8 @@ class ChatMessageInput {
       'min': min,
       'max': max,
       'value': value,
+      'isConfirmed': isConfirmed,
+      'uuid': uuid,
     };
   }
 
@@ -43,6 +51,8 @@ class ChatMessageInput {
       ),
       min: json['min'] as int?,
       max: json['max'] as int?,
+      uuid: json['uuid'] as String,
+      isConfirmed: json['isConfirmed'] as bool ?? false,
       value: json['value'] as int?,
     );
   }

@@ -14,7 +14,10 @@ class ChatMessage {
     this.status = MessageStatus.none,
     this.replyTo,
     this.input,
-  });
+    String? uuid,
+  }) {
+    this.uuid = uuid ?? Uuid().v4();
+  }
 
   /// Create a ChatMessage instance from json data
   factory ChatMessage.fromJson(Map<String, dynamic> jsonData) {
@@ -22,6 +25,7 @@ class ChatMessage {
       user: ChatUser.fromJson(jsonData['user'] as Map<String, dynamic>),
       createdAt: DateTime.parse(jsonData['createdAt'].toString()).toLocal(),
       text: jsonData['text']?.toString() ?? '',
+      uuid: jsonData['uuid']?.toString() ?? '',
       isMarkdown: jsonData['isMarkdown']?.toString() == 'true',
       medias: jsonData['medias'] != null
           ? (jsonData['medias'] as List<dynamic>)
@@ -64,6 +68,8 @@ class ChatMessage {
   /// List of medias of the message
   List<ChatMedia>? medias;
 
+  late String uuid;
+
   /// A list of quick replies that users can use to reply to this message
   List<QuickReply>? quickReplies;
 
@@ -103,6 +109,7 @@ class ChatMessage {
       'replyTo': replyTo?.toJson(),
       'isMarkdown': isMarkdown,
       'input': input?.toJson(),
+      'uuid': uuid,
     };
   }
 }

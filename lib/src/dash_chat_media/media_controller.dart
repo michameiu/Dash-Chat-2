@@ -17,8 +17,19 @@ class MediaController extends GetxController {
     );
   }
 
-  void addMessage(ChatMessage message) {
+  void addFinalMessage(ChatMessage message) {
     messages.insert(0, message);
+  }
+
+  void addMessage(ChatMessage message,
+      {Function(ChatMessage mess)? onSendMessage}) {
+    if (onSendMessage != null) {
+      onSendMessage(message);
+    } else {
+      print('onSendMessage: $onSendMessage');
+      // print('addMessage: $message');
+      messages.insert(0, message);
+    }
   }
 
   void addMediaToCurrentMessage(ChatMedia media) {
@@ -49,20 +60,22 @@ class MediaController extends GetxController {
     addMediaToCurrentMessage(media);
   }
 
-  void sendText(String text) {
+  void sendText(String text, {dynamic Function(ChatMessage)? onSendMessage}) {
     if (!isInitialized.value || currentUser.value == null) return;
 
     if (currentChatMessage.value != null) {
       final message = currentChatMessage.value!;
       message.text = text;
-      addMessage(message);
+      addMessage(message, onSendMessage: onSendMessage);
       currentChatMessage.value = null;
     } else {
-      addMessage(ChatMessage(
-        text: text,
-        user: currentUser.value!,
-        createdAt: DateTime.now(),
-      ));
+      addMessage(
+          ChatMessage(
+            text: text,
+            user: currentUser.value!,
+            createdAt: DateTime.now(),
+          ),
+          onSendMessage: onSendMessage);
     }
   }
 

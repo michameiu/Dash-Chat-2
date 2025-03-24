@@ -4,59 +4,79 @@ import 'package:dash_chat_2/dash_chat_2.dart';
 import 'input_controller.dart';
 
 class MessageInputWidget extends StatelessWidget {
-  final ChatMessageInput input;
+  final ChatMessage message;
   final Function(List<String>) onConfirm;
 
-  const MessageInputWidget({
+  MessageInputWidget({
     Key? key,
-    required this.input,
+    required this.message,
     required this.onConfirm,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    final controller = Get.put(InputController());
+    final controller = Get.put(InputController(), tag: message.uuid);
     final theme = Theme.of(context);
 
     return Obx(() {
-      if (controller.isConfirmed.value) {
-        return Text(
-          controller.selectedOptions.join(', '),
-          style: theme.textTheme.bodyMedium,
-        );
-      }
-
       return Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          if (input.type == ChatMessageInputType.checkbox) ...[
-            ...input.options.map((option) => CheckboxListTile(
-                  title: Text(option),
-                  value: controller.selectedOptions.contains(option),
-                  onChanged: (value) => controller.toggleOption(option),
-                )),
-          ] else if (input.type == ChatMessageInputType.scale) ...[
-            Text('${input.min} - ${input.max}'),
-            Slider(
-              value: controller.scaleValue.value.toDouble(),
-              min: input.min?.toDouble() ?? 0,
-              max: input.max?.toDouble() ?? 100,
-              divisions: (input.max ?? 100) - (input.min ?? 0),
-              label: controller.scaleValue.value.toString(),
-              onChanged: (value) => controller.setScaleValue(value.round()),
+          if (controller.isConfirmed.value)
+            Text(
+              controller.selectedOptions.join(', '),
+              style: theme.textTheme.bodyMedium?.copyWith(
+                color: Theme.of(context).colorScheme.onPrimary,
+              ),
             ),
-          ],
-          const SizedBox(height: 8),
-          ElevatedButton(
-            onPressed: () {
-              if (input.type == ChatMessageInputType.checkbox) {
-                onConfirm(controller.selectedOptions);
-              } else {
-                onConfirm([controller.scaleValue.value.toString()]);
-              }
-              controller.confirmInput();
-            },
-            child: const Text('Confirm'),
+          if (!controller.isConfirmed.value)
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                if (message.input?.type == ChatMessageInputType.checkbox) ...[
+                  ...message.input!.options.map((option) => CheckboxListTile(
+                        title: Text(
+                          option,
+                          style: theme.textTheme.bodyLarge?.copyWith(
+                            color: Theme.of(context).colorScheme.onPrimary,
+                          ),
+                        ),
+                        // checkColor: Theme.of(context).colorScheme.onPrimary,
+                        value: controller.selectedOptions.contains(option),
+                        onChanged: (value) => controller.toggleOption(option),
+                      )),
+                ] else if (message.input?.type ==
+                    ChatMessageInputType.scale) ...[
+                  Text('${message.input?.min} - ${message.input?.max}'),
+                  Slider(
+                    value: controller.scaleValue.value.toDouble(),
+                    min: message.input?.min?.toDouble() ?? 0,
+                    max: message.input?.max?.toDouble() ?? 100,
+                    divisions:
+                        (message.input?.max ?? 100) - (message.input?.min ?? 0),
+                    label: controller.scaleValue.value.toString(),
+                    onChanged: (value) =>
+                        controller.setScaleValue(value.round()),
+                  ),
+                ],
+                const SizedBox(height: 8),
+                ElevatedButton(
+                  onPressed: () {
+                    if (message.input?.type == ChatMessageInputType.checkbox) {
+                      onConfirm(controller.selectedOptions);
+                    } else {
+                      onConfirm([controller.scaleValue.value.toString()]);
+                    }
+                    controller.confirmInput();
+                  },
+                  child: const Text('Confirm'),
+                ),
+              ],
+            ),
+          Text(
+            message.text ?? '',
+            style: theme.textTheme.bodyLarge?.copyWith(
+              color: Theme.of(context).colorScheme.onPrimary,
+            ),
           ),
         ],
       );
