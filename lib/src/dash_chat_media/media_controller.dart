@@ -11,6 +11,10 @@ class MediaController extends GetxController {
   void onInit() {
     super.onInit();
     isInitialized.value = true;
+    currentUser.value = ChatUser(
+      id: '1',
+      firstName: 'John Doe',
+    );
   }
 
   void addMessage(ChatMessage message) {

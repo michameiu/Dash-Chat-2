@@ -7,7 +7,7 @@ export 'camera_view.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:dash_chat_2/dash_chat_2.dart';
-import 'package:chat_input/chat_input.dart';
+import 'package:chat_input/chat_input.dart' as chat_input;
 import 'media_controller.dart';
 import 'media_preview.dart';
 import 'media_selection_sheet.dart';
@@ -54,7 +54,7 @@ class DashChatMedia extends StatelessWidget {
           }),
         ),
         MediaPreview(controller: controller),
-        InputWidget(
+        chat_input.InputWidget(
           onSendAudio: (audioFile, duration) {
             controller.sendAudio(audioFile.path, duration);
           },

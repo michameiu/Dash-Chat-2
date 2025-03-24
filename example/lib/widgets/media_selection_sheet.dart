@@ -4,7 +4,7 @@ import 'package:dash_chat_2/dash_chat_2.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'dart:io' show Platform;
 import 'package:device_info_plus/device_info_plus.dart';
-import '../controllers/media_controller.dart';
+import 'package:dash_chat_2/src/dash_chat_media/media_controller.dart';
 import 'camera_view.dart';
 
 class MediaSelectionSheet extends StatelessWidget {
@@ -40,57 +40,7 @@ class MediaSelectionSheet extends StatelessWidget {
 
   Future<bool> _checkAndRequestPermissions(BuildContext context) async {
     final permissions = await _getRequiredPermissions();
-
-    // Check current status of all permissions
-    Map<Permission, PermissionStatus> statuses = {};
-    for (var permission in permissions) {
-      statuses[permission] = await permission.status;
-    }
-
-    // If all permissions are granted, return true
-    if (statuses.values.every((status) => status.isGranted)) {
-      return true;
-    }
-
-    // Request permissions that aren't granted
-    final permissionsToRequest = permissions
-        .where((permission) => !statuses[permission]!.isGranted)
-        .toList();
-
-    final results = await permissions.request();
-    statuses.addAll(results);
-
-    // Check if any permission is permanently denied
-    bool isPermanentlyDenied =
-        statuses.values.any((status) => status.isPermanentlyDenied);
-    if (isPermanentlyDenied && context.mounted) {
-      // Show dialog to direct user to app settings
-      final bool shouldOpenSettings = await showDialog<bool>(
-            context: context,
-            builder: (context) => AlertDialog(
-              title: const Text('Permissions Required'),
-              content: const Text(
-                  'Some permissions are permanently denied. Please enable them in app settings to record video.'),
-              actions: [
-                TextButton(
-                  onPressed: () => Navigator.pop(context, false),
-                  child: const Text('Cancel'),
-                ),
-                TextButton(
-                  onPressed: () => Navigator.pop(context, true),
-                  child: const Text('Open Settings'),
-                ),
-              ],
-            ),
-          ) ??
-          false;
-
-      if (shouldOpenSettings) {
-        await openAppSettings();
-      }
-      return false;
-    }
-
+    final statuses = await permissions.request();
     return statuses.values.every((status) => status.isGranted);
   }
 

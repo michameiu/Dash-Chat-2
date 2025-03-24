@@ -14,10 +14,12 @@ import 'src/helpers/link_helper.dart';
 import 'src/widgets/image_provider/image_provider.dart';
 
 export 'package:flutter_parsed_text/flutter_parsed_text.dart';
+export 'src/dash_message_input/dash_message_input.dart';
 
 part 'src/dash_chat.dart';
 part 'src/models/chat_media.dart';
 part 'src/models/chat_message.dart';
+part 'src/models/chat_message_input.dart';
 part 'src/models/chat_user.dart';
 part 'src/models/cursor_style.dart';
 part 'src/models/input_options.dart';

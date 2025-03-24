@@ -4,7 +4,7 @@ import 'package:dash_chat_2/dash_chat_2.dart';
 import 'dart:io';
 import 'package:path_provider/path_provider.dart';
 import 'package:path/path.dart' as path;
-import '../controllers/media_controller.dart';
+import 'package:dash_chat_2/src/dash_chat_media/media_controller.dart';
 
 class CameraView extends StatefulWidget {
   final MediaController controller;
@@ -100,19 +100,21 @@ class _CameraViewState extends State<CameraView> {
   Widget build(BuildContext context) {
     if (_errorMessage != null) {
       return Scaffold(
-        backgroundColor: Colors.black,
-        body: Center(
-          child: Text(
-            _errorMessage!,
-            style: const TextStyle(color: Colors.white),
+        appBar: AppBar(
+          title: const Text('Camera'),
+          leading: IconButton(
+            icon: const Icon(Icons.close),
+            onPressed: widget.onClose,
           ),
+        ),
+        body: Center(
+          child: Text(_errorMessage!),
         ),
       );
     }
 
     if (!_isInitialized) {
       return const Scaffold(
-        backgroundColor: Colors.black,
         body: Center(
           child: CircularProgressIndicator(),
         ),
@@ -120,50 +122,35 @@ class _CameraViewState extends State<CameraView> {
     }
 
     return Scaffold(
-      backgroundColor: Colors.black,
-      body: SafeArea(
-        child: Stack(
-          children: [
-            CameraPreview(_cameraController!),
-            Positioned(
-              left: 0,
-              right: 0,
-              bottom: 24,
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  GestureDetector(
-                    onTap: _toggleRecording,
-                    child: Container(
-                      width: 72,
-                      height: 72,
-                      decoration: BoxDecoration(
-                        shape: BoxShape.circle,
-                        border: Border.all(
-                          color: Colors.white,
-                          width: 4,
-                        ),
-                        color: _isRecording ? Colors.red : Colors.transparent,
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-            ),
-            Positioned(
-              top: 24,
-              right: 24,
-              child: IconButton(
-                icon: const Icon(
-                  Icons.close,
-                  color: Colors.white,
-                  size: 28,
-                ),
-                onPressed: widget.onClose,
-              ),
-            ),
-          ],
+      appBar: AppBar(
+        title: const Text('Camera'),
+        leading: IconButton(
+          icon: const Icon(Icons.close),
+          onPressed: widget.onClose,
         ),
+      ),
+      body: Stack(
+        children: [
+          CameraPreview(_cameraController!),
+          Positioned(
+            bottom: 30,
+            left: 0,
+            right: 0,
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: [
+                IconButton(
+                  icon: Icon(
+                    _isRecording ? Icons.stop : Icons.fiber_manual_record,
+                    color: _isRecording ? Colors.red : Colors.white,
+                    size: 32,
+                  ),
+                  onPressed: _toggleRecording,
+                ),
+              ],
+            ),
+          ),
+        ],
       ),
     );
   }

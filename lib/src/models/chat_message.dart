@@ -13,6 +13,7 @@ class ChatMessage {
     this.mentions,
     this.status = MessageStatus.none,
     this.replyTo,
+    this.input,
   });
 
   /// Create a ChatMessage instance from json data
@@ -44,6 +45,9 @@ class ChatMessage {
       status: MessageStatus.parse(jsonData['status'].toString()),
       replyTo: jsonData['replyTo'] != null
           ? ChatMessage.fromJson(jsonData['replyTo'] as Map<String, dynamic>)
+          : null,
+      input: jsonData['input'] != null
+          ? ChatMessageInput.fromJson(jsonData['input'] as Map<String, dynamic>)
           : null,
     );
   }
@@ -80,6 +84,9 @@ class ChatMessage {
   /// If the message is a reply of another one TODO:
   ChatMessage? replyTo;
 
+  /// Input widget for the message
+  ChatMessageInput? input;
+
   /// Convert a ChatMessage into a json
   Map<String, dynamic> toJson() {
     return <String, dynamic>{
@@ -95,6 +102,7 @@ class ChatMessage {
       'status': status.toString(),
       'replyTo': replyTo?.toJson(),
       'isMarkdown': isMarkdown,
+      'input': input?.toJson(),
     };
   }
 }
