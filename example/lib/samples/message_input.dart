@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:dash_chat_2/dash_chat_2.dart';
 import 'package:get/get.dart';
 import 'package:dash_chat_2/src/dash_chat_media/media_controller.dart';
+import 'package:dash_chat_2/src/dash_chat_media/dash_chat_media.dart';
 import 'package:examples/data.dart';
 
 class MessageInputSample extends StatelessWidget {
@@ -17,32 +18,11 @@ class MessageInputSample extends StatelessWidget {
         children: [
           Expanded(
             child: Obx(() {
-              return DashChat(
+              return DashChatMedia(
                 messageOptions: MessageOptions(
                   currentUserContainerColor: Colors.blue,
                   containerColor: Colors.grey,
                   textColor: Colors.white,
-                  messageTextBuilder: (ChatMessage message,
-                      ChatMessage? previousMessage, ChatMessage? nextMessage) {
-                    if (message.input != null) {
-                      return MessageInputWidget(
-                        input: message.input!,
-                        onConfirm: (selected) {
-                          message.input = ChatMessageInput(
-                            options: message.input!.options,
-                            type: message.input!.type,
-                            selected: selected,
-                          );
-                          controller.messages.refresh();
-                        },
-                      );
-                    }
-                    return DefaultMessageText(
-                      message: message,
-                      isOwnMessage:
-                          message.user.id == controller.currentUser.value?.id,
-                    );
-                  },
                 ),
                 inputOptions: InputOptions(
                   inputTextStyle: const TextStyle(color: Colors.black),
@@ -65,14 +45,13 @@ class MessageInputSample extends StatelessWidget {
                 ),
                 currentUser: controller.currentUser.value!,
                 readOnly: false,
-                onSend: (ChatMessage m) {
+                onMessage: (ChatMessage m) {
                   m.input = ChatMessageInput(
                     options: ['leaks', 'functionality'],
                     type: ChatMessageInputType.checkbox,
                   );
                   controller.addMessage(m);
                 },
-                messages: controller.messages.value,
               );
             }),
           ),

@@ -1,4 +1,3 @@
-export 'dash_chat_media_widget.dart';
 export 'media_controller.dart';
 export 'media_preview.dart';
 export 'media_selection_sheet.dart';
@@ -41,7 +40,72 @@ class DashChatMedia extends StatelessWidget {
               return const Center(child: CircularProgressIndicator());
             }
             return DashChat(
-              messageOptions: messageOptions ?? const MessageOptions(),
+              messageOptions: MessageOptions(
+                showCurrentUserAvatar:
+                    messageOptions?.showCurrentUserAvatar ?? false,
+                showOtherUsersAvatar:
+                    messageOptions?.showOtherUsersAvatar ?? true,
+                showOtherUsersName: messageOptions?.showOtherUsersName ?? true,
+                userNameBuilder: messageOptions?.userNameBuilder,
+                avatarBuilder: messageOptions?.avatarBuilder,
+                onPressAvatar: messageOptions?.onPressAvatar,
+                onLongPressAvatar: messageOptions?.onLongPressAvatar,
+                onLongPressMessage: messageOptions?.onLongPressMessage,
+                onPressMessage: messageOptions?.onPressMessage,
+                onPressMention: messageOptions?.onPressMention,
+                containerColor:
+                    messageOptions?.containerColor ?? const Color(0xFFF5F5F5),
+                textColor: messageOptions?.textColor ?? Colors.black,
+                messagePadding:
+                    messageOptions?.messagePadding ?? const EdgeInsets.all(11),
+                maxWidth: messageOptions?.maxWidth,
+                messageDecorationBuilder:
+                    messageOptions?.messageDecorationBuilder,
+                top: messageOptions?.top,
+                bottom: messageOptions?.bottom,
+                messageRowBuilder: messageOptions?.messageRowBuilder,
+                messageTextBuilder: (ChatMessage message,
+                    ChatMessage? previousMessage, ChatMessage? nextMessage) {
+                  if (message.input != null) {
+                    return MessageInputWidget(
+                      input: message.input!,
+                      onConfirm: (selected) {
+                        message.input = ChatMessageInput(
+                          options: message.input!.options,
+                          type: message.input!.type,
+                          selected: selected,
+                        );
+                        controller.messages.refresh();
+                      },
+                    );
+                  }
+                  return messageOptions?.messageTextBuilder
+                          ?.call(message, previousMessage, nextMessage) ??
+                      DefaultMessageText(
+                        message: message,
+                        isOwnMessage:
+                            message.user.id == controller.currentUser.value?.id,
+                      );
+                },
+                parsePatterns: messageOptions?.parsePatterns,
+                textBeforeMedia: messageOptions?.textBeforeMedia ?? true,
+                onTapMedia: messageOptions?.onTapMedia,
+                showTime: messageOptions?.showTime ?? false,
+                timeFormat: messageOptions?.timeFormat,
+                messageTimeBuilder: messageOptions?.messageTimeBuilder,
+                messageMediaBuilder: messageOptions?.messageMediaBuilder,
+                borderRadius: messageOptions?.borderRadius ?? 18.0,
+                marginDifferentAuthor: messageOptions?.marginDifferentAuthor ??
+                    const EdgeInsets.only(top: 15),
+                marginSameAuthor: messageOptions?.marginSameAuthor ??
+                    const EdgeInsets.only(top: 2),
+                spaceWhenAvatarIsHidden:
+                    messageOptions?.spaceWhenAvatarIsHidden ?? 10.0,
+                timeFontSize: messageOptions?.timeFontSize ?? 10.0,
+                timePadding: messageOptions?.timePadding ??
+                    const EdgeInsets.only(top: 5),
+                markdownStyleSheet: messageOptions?.markdownStyleSheet,
+              ),
               inputOptions: inputOptions ?? const InputOptions(),
               currentUser: controller.currentUser.value!,
               readOnly: readOnly,
