@@ -21,6 +21,12 @@ class MessageInputWidget extends StatelessWidget {
     return Obx(() {
       return Column(
         children: [
+          Text(
+            message.text ?? '',
+            style: theme.textTheme.bodyLarge?.copyWith(
+              color: Theme.of(context).colorScheme.onPrimary,
+            ),
+          ),
           if (controller.isConfirmed.value)
             Text(
               controller.selectedOptions.join(', '),
@@ -72,12 +78,6 @@ class MessageInputWidget extends StatelessWidget {
                 ),
               ],
             ),
-          Text(
-            message.text ?? '',
-            style: theme.textTheme.bodyLarge?.copyWith(
-              color: Theme.of(context).colorScheme.onPrimary,
-            ),
-          ),
         ],
       );
     });
