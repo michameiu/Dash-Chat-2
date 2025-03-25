@@ -65,14 +65,19 @@ class MediaPreview extends StatelessWidget {
                       children: [
                         if (media.type == MediaType.image)
                           ClipRRect(
-                            borderRadius: BorderRadius.circular(8),
-                            child: Image.network(
-                              media.url,
-                              fit: BoxFit.cover,
-                              width: double.infinity,
-                              height: double.infinity,
-                            ),
-                          )
+                              borderRadius: BorderRadius.circular(8),
+                              child: const Icon(
+                                Icons.image,
+                                color: Colors.white,
+                                size: 30,
+                              )
+                              //  Image.network(
+                              //   media.url,
+                              //   fit: BoxFit.cover,
+                              //   width: double.infinity,
+                              //   height: double.infinity,
+                              // ),
+                              )
                         else if (media.type == MediaType.video)
                           Container(
                             decoration: BoxDecoration(
