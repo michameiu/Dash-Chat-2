@@ -17,6 +17,7 @@ class DashChatMedia extends StatelessWidget {
   final bool readOnly;
   final MessageOptions? messageOptions;
   final InputOptions? inputOptions;
+  final List<ChatUser>? typingUsers;
 
   const DashChatMedia({
     Key? key,
@@ -25,6 +26,7 @@ class DashChatMedia extends StatelessWidget {
     this.readOnly = false,
     this.messageOptions,
     this.inputOptions,
+    this.typingUsers,
   }) : super(key: key);
 
   @override
@@ -40,6 +42,7 @@ class DashChatMedia extends StatelessWidget {
               return const Center(child: CircularProgressIndicator());
             }
             return DashChat(
+              typingUsers: typingUsers,
               messageOptions: MessageOptions(
                 showCurrentUserAvatar:
                     messageOptions?.showCurrentUserAvatar ?? false,
