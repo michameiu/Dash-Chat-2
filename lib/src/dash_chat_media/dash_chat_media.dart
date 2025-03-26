@@ -18,10 +18,12 @@ class DashChatMedia extends StatelessWidget {
   final MessageOptions? messageOptions;
   final InputOptions? inputOptions;
   final List<ChatUser>? typingUsers;
+  final QuickReplyOptions quickReplyOptions;
 
   const DashChatMedia({
     Key? key,
     required this.onMessage,
+    this.quickReplyOptions = const QuickReplyOptions(),
     required this.currentUser,
     this.readOnly = false,
     this.messageOptions,
@@ -43,6 +45,7 @@ class DashChatMedia extends StatelessWidget {
             }
             return DashChat(
               typingUsers: typingUsers,
+              quickReplyOptions: quickReplyOptions,
               messageOptions: MessageOptions(
                 showCurrentUserAvatar:
                     messageOptions?.showCurrentUserAvatar ?? false,
