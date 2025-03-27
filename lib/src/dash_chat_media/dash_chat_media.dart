@@ -13,6 +13,7 @@ import 'media_selection_sheet.dart';
 
 class DashChatMedia extends StatelessWidget {
   final Function(ChatMessage) onMessage;
+  final Function(ChatMessage)? onConfirmInput;
   final ChatUser currentUser;
   final bool readOnly;
   final MessageOptions? messageOptions;
@@ -28,6 +29,7 @@ class DashChatMedia extends StatelessWidget {
     this.readOnly = false,
     this.messageOptions,
     this.inputOptions,
+    this.onConfirmInput,
     this.typingUsers,
   }) : super(key: key);
 
@@ -88,6 +90,9 @@ class DashChatMedia extends StatelessWidget {
                         // inputController.confirmInput();
                         print('message: ${message.toJson()}');
                         controller.messages.refresh();
+                        if (onConfirmInput != null) {
+                          onConfirmInput!(message);
+                        }
                       },
                     );
                   }
