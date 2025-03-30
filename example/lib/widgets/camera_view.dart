@@ -4,7 +4,6 @@ import 'package:dash_chat_2/dash_chat_2.dart';
 import 'dart:io';
 import 'package:path_provider/path_provider.dart';
 import 'package:path/path.dart' as path;
-import 'package:dash_chat_2/src/dash_chat_media/media_controller.dart';
 
 class CameraView extends StatefulWidget {
   final MediaController controller;

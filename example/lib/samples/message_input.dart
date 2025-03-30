@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:dash_chat_2/dash_chat_2.dart';
 import 'package:get/get.dart';
-import 'package:dash_chat_2/src/dash_chat_media/media_controller.dart';
-import 'package:dash_chat_2/src/dash_chat_media/dash_chat_media.dart';
 import 'package:examples/data.dart';
 
 class MessageInputSample extends StatelessWidget {

@@ -4,8 +4,6 @@ import 'package:dash_chat_2/dash_chat_2.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'dart:io' show Platform;
 import 'package:device_info_plus/device_info_plus.dart';
-import 'package:dash_chat_2/src/dash_chat_media/media_controller.dart';
-import 'camera_view.dart';
 
 class MediaSelectionSheet extends StatelessWidget {
   final MediaController controller;

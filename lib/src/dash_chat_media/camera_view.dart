@@ -1,10 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:camera/camera.dart';
-import 'package:dash_chat_2/dash_chat_2.dart';
-import 'dart:io';
 import 'package:path_provider/path_provider.dart';
 import 'package:path/path.dart' as path;
-import 'media_controller.dart';
+
+part of '../../dash_chat_2.dart';
 
 class CameraView extends StatefulWidget {
   final MediaController controller;

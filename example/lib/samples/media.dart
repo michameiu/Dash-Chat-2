@@ -4,9 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:chat_input/chat_input.dart' as chat_input;
-import '../widgets/media_preview.dart';
-import '../widgets/media_selection_sheet.dart';
-import 'package:dash_chat_2/src/dash_chat_media/media_controller.dart';
 
 class Media extends StatelessWidget {
   final MediaController controller = Get.put(MediaController());

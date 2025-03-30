@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:dash_chat_2/dash_chat_2.dart';
-import 'media_controller.dart';
+
+part of '../../dash_chat_2.dart';
 
 class MediaPreview extends StatelessWidget {
   final MediaController controller;

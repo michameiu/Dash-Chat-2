@@ -1,5 +1,6 @@
 import 'package:get/get.dart';
-import 'package:dash_chat_2/dash_chat_2.dart';
+
+part of '../../dash_chat_2.dart';
 
 class InputController extends GetxController {
   final RxList<String> selectedOptions = <String>[].obs;

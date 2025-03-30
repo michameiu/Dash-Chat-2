@@ -1,15 +1,6 @@
-export 'media_controller.dart';
-export 'media_preview.dart';
-export 'media_selection_sheet.dart';
-export 'camera_view.dart';
-
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:dash_chat_2/dash_chat_2.dart';
 import 'package:chat_input/chat_input.dart' as chat_input;
-import 'media_controller.dart';
-import 'media_preview.dart';
-import 'media_selection_sheet.dart';
 
 part of '../../dash_chat_2.dart';
 class DashChatMedia extends StatelessWidget {

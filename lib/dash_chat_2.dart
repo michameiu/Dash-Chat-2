@@ -1,6 +1,7 @@
 library dash_chat_2;
 
 import 'dart:math';
+import 'dart:io';
 import 'package:get/get.dart';
 import 'package:uuid/uuid.dart';
 
@@ -11,6 +12,13 @@ import 'package:flutter_markdown/flutter_markdown.dart';
 import 'package:flutter_parsed_text/flutter_parsed_text.dart';
 import 'package:intl/intl.dart' as intl;
 import 'package:video_player/video_player.dart' as vp;
+import 'package:camera/camera.dart';
+import 'package:path_provider/path_provider.dart';
+import 'package:path/path.dart' as path;
+import 'package:permission_handler/permission_handler.dart';
+import 'package:device_info_plus/device_info_plus.dart';
+import 'package:image_picker/image_picker.dart';
+import 'package:chat_input/chat_input.dart' as chat_input;
 
 import 'src/helpers/link_helper.dart';
 import 'src/widgets/image_provider/image_provider.dart';
@@ -51,5 +59,10 @@ part 'src/widgets/quick_replies/default_quick_reply.dart';
 part 'src/widgets/quick_replies/quick_replies.dart';
 part 'src/widgets/typing_users/default_typing_builder.dart';
 part 'src/widgets/typing_users/typing_indicator.dart';
+part 'src/dash_message_input/input_controller.dart';
+part 'src/dash_message_input/input_widget.dart';
 part 'src/dash_chat_media/media_controller.dart';
 part 'src/dash_chat_media/dash_chat_media.dart';
+part 'src/dash_chat_media/media_preview.dart';
+part 'src/dash_chat_media/media_selection_sheet.dart';
+part 'src/dash_chat_media/camera_view.dart';
