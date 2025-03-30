@@ -51,3 +51,5 @@ part 'src/widgets/quick_replies/default_quick_reply.dart';
 part 'src/widgets/quick_replies/quick_replies.dart';
 part 'src/widgets/typing_users/default_typing_builder.dart';
 part 'src/widgets/typing_users/typing_indicator.dart';
+part 'src/dash_chat_media/media_controller.dart';
+part 'src/dash_chat_media/dash_chat_media.dart';

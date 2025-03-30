@@ -11,6 +11,7 @@ import 'media_controller.dart';
 import 'media_preview.dart';
 import 'media_selection_sheet.dart';
 
+part of '../../dash_chat_2.dart';
 class DashChatMedia extends StatelessWidget {
   final Function(ChatMessage) onMessage;
   final Function(ChatMessage)? onConfirmInput;
