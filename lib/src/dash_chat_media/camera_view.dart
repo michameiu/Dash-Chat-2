@@ -1,17 +1,37 @@
-import 'package:flutter/material.dart';
-import 'package:camera/camera.dart';
-import 'package:path_provider/path_provider.dart';
-import 'package:path/path.dart' as path;
-
 part of '../../dash_chat_2.dart';
 
+// Data class to pass recording data between isolates
+class RecordingData {
+  final String videoPath;
+  final bool success;
+
+  RecordingData(this.videoPath, this.success);
+}
+
+// Isolate function for handling video recording
+Future<RecordingData> _handleVideoRecordingInIsolate(String videoPath) async {
+  try {
+    final file = File(videoPath);
+    if (await file.exists()) {
+      // Add any video processing here if needed
+      await Future.delayed(
+          const Duration(milliseconds: 500)); // Ensure file is written
+      return RecordingData(videoPath, true);
+    }
+    return RecordingData(videoPath, false);
+  } catch (e) {
+    print('Error in recording isolate: $e');
+    return RecordingData(videoPath, false);
+  }
+}
+
 class CameraView extends StatefulWidget {
-  final MediaController controller;
+  final MediaController mediaController;
   final Function() onClose;
 
   const CameraView({
     Key? key,
-    required this.controller,
+    required this.mediaController,
     required this.onClose,
   }) : super(key: key);
 
@@ -20,36 +40,192 @@ class CameraView extends StatefulWidget {
 }
 
 class _CameraViewState extends State<CameraView> {
-  CameraController? _cameraController;
-  bool _isRecording = false;
-  bool _isInitialized = false;
-  String? _errorMessage;
+  late final CameraViewController cameraController;
 
   @override
   void initState() {
     super.initState();
+    cameraController = CameraViewController(
+      mediaController: widget.mediaController,
+      closeCallback: widget.onClose,
+    );
+    Get.put(cameraController);
+  }
+
+  @override
+  void dispose() {
+    Get.delete<CameraViewController>();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      debugShowCheckedModeBanner: false,
+      home: Scaffold(
+        backgroundColor: Colors.black,
+        body: SafeArea(
+          child: Obx(() {
+            if (cameraController.errorMessage.isNotEmpty) {
+              return Center(
+                child: Text(
+                  cameraController.errorMessage.value,
+                  style: const TextStyle(color: Colors.white),
+                ),
+              );
+            }
+
+            if (!cameraController.isInitialized.value) {
+              return const Center(
+                child: CircularProgressIndicator(),
+              );
+            }
+
+            return Stack(
+              children: [
+                RepaintBoundary(
+                  child: CameraPreview(
+                    cameraController.cameraController.value!,
+                    key: const ValueKey('camera_preview'),
+                  ),
+                ),
+                _buildControls(),
+              ],
+            );
+          }),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildControls() {
+    return Stack(
+      children: [
+        Positioned(
+          left: 0,
+          right: 0,
+          bottom: 24,
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Obx(() => GestureDetector(
+                    onTap: cameraController.toggleRecording,
+                    child: Container(
+                      width: 72,
+                      height: 72,
+                      decoration: BoxDecoration(
+                        shape: BoxShape.circle,
+                        border: Border.all(
+                          color: Colors.white,
+                          width: 4,
+                        ),
+                        color: cameraController.isRecording.value
+                            ? Colors.red
+                            : Colors.transparent,
+                      ),
+                    ),
+                  )),
+            ],
+          ),
+        ),
+        Positioned(
+          top: 24,
+          right: 24,
+          child: IconButton(
+            icon: const Icon(
+              Icons.close,
+              color: Colors.white,
+              size: 28,
+            ),
+            onPressed: widget.onClose,
+          ),
+        ),
+      ],
+    );
+  }
+}
+
+class CameraViewController extends GetxController {
+  final MediaController mediaController;
+  final Function() closeCallback;
+
+  final Rx<CameraController?> cameraController = Rx<CameraController?>(null);
+  final RxBool isRecording = false.obs;
+  final RxBool isInitialized = false.obs;
+  final RxString errorMessage = RxString('');
+  String? _currentVideoPath;
+
+  CameraViewController({
+    required this.mediaController,
+    required this.closeCallback,
+  });
+
+  @override
+  void onInit() {
+    super.onInit();
     _initializeCamera();
+  }
+
+  Future<void> _disposeCurrentCamera() async {
+    try {
+      final currentController = cameraController.value;
+      if (currentController != null) {
+        if (isRecording.value) {
+          try {
+            await currentController.stopVideoRecording();
+          } catch (e) {
+            print('Error stopping recording during disposal: $e');
+          }
+        }
+        await currentController.dispose();
+        cameraController.value = null;
+        isInitialized.value = false;
+      }
+    } catch (e) {
+      print('Error disposing camera: $e');
+    }
   }
 
   Future<void> _initializeCamera() async {
     try {
+      // Ensure any existing camera is properly disposed
+      await _disposeCurrentCamera();
+      await Future.delayed(const Duration(milliseconds: 300));
+
       final cameras = await availableCameras();
       if (cameras.isEmpty) {
-        setState(() => _errorMessage = 'No cameras available');
+        errorMessage.value = 'No cameras available';
         return;
       }
 
       final camera = cameras.first;
-      _cameraController = CameraController(
+      final controller = CameraController(
         camera,
         ResolutionPreset.medium,
         enableAudio: true,
+        imageFormatGroup: ImageFormatGroup.jpeg,
       );
 
-      await _cameraController!.initialize();
-      setState(() => _isInitialized = true);
+      // Listen for camera errors
+      controller.addListener(() {
+        if (controller.value.hasError) {
+          errorMessage.value =
+              'Camera error: ${controller.value.errorDescription}';
+        }
+      });
+
+      try {
+        await controller.initialize();
+        // Add a small delay after initialization
+        await Future.delayed(const Duration(milliseconds: 500));
+        cameraController.value = controller;
+        isInitialized.value = true;
+      } catch (e) {
+        await controller.dispose();
+        errorMessage.value = 'Failed to initialize camera: $e';
+      }
     } catch (e) {
-      setState(() => _errorMessage = 'Error initializing camera: $e');
+      errorMessage.value = 'Error initializing camera: $e';
     }
   }
 
@@ -61,109 +237,56 @@ class _CameraViewState extends State<CameraView> {
     return path.join(videosDir, 'VID_$timestamp.mp4');
   }
 
-  Future<void> _toggleRecording() async {
-    if (_cameraController == null || !_isInitialized) return;
+  Future<void> toggleRecording() async {
+    if (cameraController.value == null || !isInitialized.value) return;
 
     try {
-      if (_isRecording) {
-        final XFile video = await _cameraController!.stopVideoRecording();
-        setState(() => _isRecording = false);
+      if (isRecording.value) {
+        // Add a small delay before stopping recording
+        await Future.delayed(const Duration(milliseconds: 200));
+        final XFile video = await cameraController.value!.stopVideoRecording();
+        // Add a delay after stopping recording
+        await Future.delayed(const Duration(milliseconds: 500));
+        isRecording.value = false;
 
-        if (!mounted) return;
+        if (_currentVideoPath != null) {
+          // Process recording in isolate
+          final result = await compute(
+            _handleVideoRecordingInIsolate,
+            video.path,
+          );
 
-        widget.controller.addMediaToCurrentMessage(
-          ChatMedia(
-            type: MediaType.video,
-            url: video.path,
-            fileName: path.basename(video.path),
-          ),
-        );
-        widget.onClose();
+          if (result.success) {
+            mediaController.addMediaToCurrentMessage(
+              ChatMedia(
+                type: MediaType.video,
+                url: result.videoPath,
+                fileName: path.basename(result.videoPath),
+              ),
+            );
+            closeCallback();
+          } else {
+            errorMessage.value = 'Failed to process video recording';
+          }
+        }
       } else {
-        final videoPath = await _getVideoFilePath();
-        await _cameraController!.startVideoRecording();
-        setState(() => _isRecording = true);
+        _currentVideoPath = await _getVideoFilePath();
+        // Add a small delay before starting recording
+        await Future.delayed(const Duration(milliseconds: 200));
+        await cameraController.value!.startVideoRecording();
+        isRecording.value = true;
       }
     } catch (e) {
-      setState(() => _errorMessage = 'Error recording video: $e');
+      errorMessage.value = 'Error recording video: $e';
+      isRecording.value = false;
+      // Try to reinitialize camera on error
+      await _initializeCamera();
     }
   }
 
   @override
-  void dispose() {
-    _cameraController?.dispose();
-    super.dispose();
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    if (_errorMessage != null) {
-      return Scaffold(
-        backgroundColor: Colors.black,
-        body: Center(
-          child: Text(
-            _errorMessage!,
-            style: const TextStyle(color: Colors.white),
-          ),
-        ),
-      );
-    }
-
-    if (!_isInitialized) {
-      return const Scaffold(
-        backgroundColor: Colors.black,
-        body: Center(
-          child: CircularProgressIndicator(),
-        ),
-      );
-    }
-
-    return Scaffold(
-      backgroundColor: Colors.black,
-      body: SafeArea(
-        child: Stack(
-          children: [
-            CameraPreview(_cameraController!),
-            Positioned(
-              left: 0,
-              right: 0,
-              bottom: 24,
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  GestureDetector(
-                    onTap: _toggleRecording,
-                    child: Container(
-                      width: 72,
-                      height: 72,
-                      decoration: BoxDecoration(
-                        shape: BoxShape.circle,
-                        border: Border.all(
-                          color: Colors.white,
-                          width: 4,
-                        ),
-                        color: _isRecording ? Colors.red : Colors.transparent,
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-            ),
-            Positioned(
-              top: 24,
-              right: 24,
-              child: IconButton(
-                icon: const Icon(
-                  Icons.close,
-                  color: Colors.white,
-                  size: 28,
-                ),
-                onPressed: widget.onClose,
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
+  void onClose() {
+    _disposeCurrentCamera();
+    super.onClose();
   }
 }

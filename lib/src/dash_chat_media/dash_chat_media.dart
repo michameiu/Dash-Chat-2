@@ -1,8 +1,5 @@
-import 'package:flutter/material.dart';
-import 'package:get/get.dart';
-import 'package:chat_input/chat_input.dart' as chat_input;
-
 part of '../../dash_chat_2.dart';
+
 class DashChatMedia extends StatelessWidget {
   final Function(ChatMessage) onMessage;
   final Function(ChatMessage)? onConfirmInput;

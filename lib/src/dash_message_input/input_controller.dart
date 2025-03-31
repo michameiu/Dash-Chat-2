@@ -1,5 +1,3 @@
-import 'package:get/get.dart';
-
 part of '../../dash_chat_2.dart';
 
 class InputController extends GetxController {

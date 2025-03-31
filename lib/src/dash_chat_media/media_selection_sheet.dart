@@ -1,8 +1,3 @@
-import 'package:flutter/material.dart';
-import 'package:image_picker/image_picker.dart';
-import 'package:permission_handler/permission_handler.dart';
-import 'package:device_info_plus/device_info_plus.dart';
-
 part of '../../dash_chat_2.dart';
 
 class MediaSelectionSheet extends StatelessWidget {
@@ -110,7 +105,7 @@ class MediaSelectionSheet extends StatelessWidget {
       Navigator.of(context).push(
         MaterialPageRoute(
           builder: (context) => CameraView(
-            controller: controller,
+            mediaController: controller,
             onClose: () => Navigator.of(context).pop(),
           ),
         ),

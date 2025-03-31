@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:dash_chat_2/dash_chat_2.dart';
-import 'package:dash_chat_2/src/dash_message_input/input_widget.dart';
 
 class InputExample extends StatefulWidget {
   const InputExample({Key? key}) : super(key: key);
@@ -85,12 +84,12 @@ class _InputExampleState extends State<InputExample> {
         messageOptions: MessageOptions(
           messageTextBuilder: (ChatMessage message,
               ChatMessage? previousMessage, ChatMessage? nextMessage) {
-            if (message.input != null) {
-              return MessageInputWidget(
-                input: message.input!,
-                onConfirm: (selected) => _handleInputConfirm(message, selected),
-              );
-            }
+            // if (message.input != null) {
+            //   return MessageInputWidget(
+            //     input: message.input!,
+            //     onConfirm: (selected) => _handleInputConfirm(message, selected),
+            //   );
+            // }
             return DefaultMessageText(
               message: message,
               isOwnMessage: message.user.id == _user.id,

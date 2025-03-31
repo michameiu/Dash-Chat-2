@@ -20,7 +20,7 @@ class MediaExample extends StatelessWidget {
           currentUser: controller.currentUser.value!,
           readOnly: true,
           onMessage: (ChatMessage message) {
-            
+            controller.addFinalMessage(message);
             print('New message: ${message.text}');
             if (message.medias != null) {
               print('Media count: ${message.medias!.length}');
