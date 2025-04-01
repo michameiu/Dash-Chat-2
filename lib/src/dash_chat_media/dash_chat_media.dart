@@ -9,7 +9,7 @@ class DashChatMedia extends StatelessWidget {
   final InputOptions? inputOptions;
   final List<ChatUser>? typingUsers;
   final QuickReplyOptions quickReplyOptions;
-  final MessageListOptions? messageListOptions;
+  final MessageListOptions messageListOptions;
 
   const DashChatMedia({
     Key? key,
@@ -20,7 +20,7 @@ class DashChatMedia extends StatelessWidget {
     this.messageOptions,
     this.inputOptions,
     this.onConfirmInput,
-    this.messageListOptions,
+    this.messageListOptions = const MessageListOptions(),
     this.typingUsers,
   }) : super(key: key);
 
@@ -117,7 +117,7 @@ class DashChatMedia extends StatelessWidget {
               inputOptions: inputOptions ?? const InputOptions(),
               currentUser: controller.currentUser.value!,
               readOnly: readOnly,
-              messageListOptions: messageOptions,
+              messageListOptions: messageListOptions,
               onSend: (ChatMessage m) {
                 print('onSend11: $onMessage');
                 // controller.addMessage(m, onSendMessage: onMessage);
