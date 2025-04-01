@@ -6,6 +6,7 @@ class MessageList extends StatefulWidget {
     required this.currentUser,
     required this.messages,
     this.readOnly = false,
+    this.typingText = 'is typing',
     this.messageOptions = const MessageOptions(),
     this.messageListOptions = const MessageListOptions(),
     this.quickReplyOptions = const QuickReplyOptions(),
@@ -37,6 +38,8 @@ class MessageList extends StatefulWidget {
 
   /// List of users currently typing in the chat
   final List<ChatUser>? typingUsers;
+
+  final String typingText;
 
   @override
   State<MessageList> createState() => MessageListState();
@@ -125,7 +128,10 @@ class MessageListState extends State<MessageList> {
                   if (widget.messageListOptions.typingBuilder != null) {
                     return widget.messageListOptions.typingBuilder!(user);
                   }
-                  return DefaultTypingBuilder(user: user);
+                  return DefaultTypingBuilder(
+                    user: user,
+                    text: widget.typingText,
+                  );
                 }),
               if (widget.messageListOptions.showFooterBeforeQuickReplies &&
                   widget.messageListOptions.chatFooterBuilder != null)
