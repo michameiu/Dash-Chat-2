@@ -14,7 +14,9 @@ class MessageListOptions {
     this.onLoadEarlier,
     this.typingBuilder,
     this.scrollPhysics,
+    this.typingText = 'is typing',
   });
+  final String typingText;
 
   /// If you want to who a date separator between messages of different dates
   final bool showDateSeparator;
