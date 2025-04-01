@@ -154,6 +154,7 @@ class CameraViewController extends GetxController {
   final RxBool isInitialized = false.obs;
   final RxString errorMessage = RxString('');
   String? _currentVideoPath;
+  bool _isDisposing = false;
 
   CameraViewController({
     required this.mediaController,
@@ -167,30 +168,60 @@ class CameraViewController extends GetxController {
   }
 
   Future<void> _disposeCurrentCamera() async {
+    if (_isDisposing) return;
+    _isDisposing = true;
+
     try {
       final currentController = cameraController.value;
       if (currentController != null) {
         if (isRecording.value) {
           try {
+            isRecording.value = false;
             await currentController.stopVideoRecording();
           } catch (e) {
             print('Error stopping recording during disposal: $e');
           }
+          // Add delay after stopping recording
+          await Future.delayed(const Duration(milliseconds: 300));
         }
+
+        // Remove listener before disposal
+        currentController.removeListener(_onCameraError);
+
+        // Add delay before disposal
+        await Future.delayed(const Duration(milliseconds: 300));
         await currentController.dispose();
         cameraController.value = null;
         isInitialized.value = false;
       }
     } catch (e) {
       print('Error disposing camera: $e');
+    } finally {
+      _isDisposing = false;
     }
+  }
+
+  void _onCameraError() {
+    final controller = cameraController.value;
+    if (controller != null && controller.value.hasError) {
+      errorMessage.value = 'Camera error: ${controller.value.errorDescription}';
+      _handleCameraError();
+    }
+  }
+
+  Future<void> _handleCameraError() async {
+    // Reset recording state
+    isRecording.value = false;
+
+    // Try to reinitialize the camera
+    await _initializeCamera();
   }
 
   Future<void> _initializeCamera() async {
     try {
       // Ensure any existing camera is properly disposed
       await _disposeCurrentCamera();
-      await Future.delayed(const Duration(milliseconds: 300));
+      await Future.delayed(const Duration(milliseconds: 500));
 
       final cameras = await availableCameras();
       if (cameras.isEmpty) {
@@ -207,12 +238,7 @@ class CameraViewController extends GetxController {
       );
 
       // Listen for camera errors
-      controller.addListener(() {
-        if (controller.value.hasError) {
-          errorMessage.value =
-              'Camera error: ${controller.value.errorDescription}';
-        }
-      });
+      controller.addListener(_onCameraError);
 
       try {
         await controller.initialize();
@@ -238,16 +264,19 @@ class CameraViewController extends GetxController {
   }
 
   Future<void> toggleRecording() async {
-    if (cameraController.value == null || !isInitialized.value) return;
+    if (cameraController.value == null || !isInitialized.value || _isDisposing)
+      return;
 
     try {
       if (isRecording.value) {
         // Add a small delay before stopping recording
         await Future.delayed(const Duration(milliseconds: 200));
+
         final XFile video = await cameraController.value!.stopVideoRecording();
+        isRecording.value = false;
+
         // Add a delay after stopping recording
         await Future.delayed(const Duration(milliseconds: 500));
-        isRecording.value = false;
 
         if (_currentVideoPath != null) {
           // Process recording in isolate
@@ -280,7 +309,7 @@ class CameraViewController extends GetxController {
       errorMessage.value = 'Error recording video: $e';
       isRecording.value = false;
       // Try to reinitialize camera on error
-      await _initializeCamera();
+      await _handleCameraError();
     }
   }
 

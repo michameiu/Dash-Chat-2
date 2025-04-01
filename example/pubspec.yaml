@@ -26,7 +26,8 @@ dependencies:
   dash_chat_2:
     path: ../
   get: ^4.6.6
-  image_picker: ^0.8.9
+  file_picker: ^6.1.1
+  image_picker: ^1.0.7
   chat_input: ^0.0.6
   permission_handler: ^11.3.0
   device_info_plus: ^9.1.2
@@ -38,6 +39,7 @@ dependencies:
 
 dependency_overrides:
   win32: 5.5.4
+  image_picker: ^1.0.7
 
 dev_dependencies:
   flutter_lints: ^2.0.0

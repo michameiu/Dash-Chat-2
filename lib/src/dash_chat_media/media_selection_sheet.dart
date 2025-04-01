@@ -150,6 +150,26 @@ class MediaSelectionSheet extends StatelessWidget {
               _handleVideoRecording(context);
             },
           ),
+          ListTile(
+            leading: const Icon(Icons.attach_file),
+            title: const Text('Select File'),
+            onTap: () async {
+              Navigator.pop(context);
+              if (await _checkAndRequestPermissions(context)) {
+                final FilePickerResult? result =
+                    await FilePicker.platform.pickFiles();
+                if (result != null && result.files.single.path != null) {
+                  controller.addMediaToCurrentMessage(
+                    ChatMedia(
+                      type: MediaType.file,
+                      url: result.files.single.path!,
+                      fileName: result.files.single.name,
+                    ),
+                  );
+                }
+              }
+            },
+          ),
         ],
       ),
     );
