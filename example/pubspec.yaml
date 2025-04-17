@@ -40,6 +40,10 @@ dependencies:
 dependency_overrides:
   win32: 5.5.4
   image_picker: ^1.0.7
+  chat_input:
+    git:
+      url: https://github.com/michameiu/chat_input.git
+      ref: "2ba9180"
 
 dev_dependencies:
   flutter_lints: ^2.0.0

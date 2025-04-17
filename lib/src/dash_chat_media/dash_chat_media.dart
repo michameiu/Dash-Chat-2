@@ -10,6 +10,7 @@ class DashChatMedia extends StatelessWidget {
   final List<ChatUser>? typingUsers;
   final QuickReplyOptions quickReplyOptions;
   final MessageListOptions messageListOptions;
+  final String inputHintText;
 
   const DashChatMedia({
     Key? key,
@@ -20,6 +21,7 @@ class DashChatMedia extends StatelessWidget {
     this.messageOptions,
     this.inputOptions,
     this.onConfirmInput,
+    this.inputHintText = 'Flag an issue',
     this.messageListOptions = const MessageListOptions(),
     this.typingUsers,
   }) : super(key: key);
@@ -128,6 +130,7 @@ class DashChatMedia extends StatelessWidget {
         ),
         MediaPreview(controller: controller),
         chat_input.InputWidget(
+          hintText: inputHintText,
           onSendAudio: (audioFile, duration) {
             controller.sendAudio(audioFile.path, duration);
           },
