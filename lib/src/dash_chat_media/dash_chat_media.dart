@@ -129,21 +129,24 @@ class DashChatMedia extends StatelessWidget {
           }),
         ),
         MediaPreview(controller: controller),
-        chat_input.InputWidget(
-          hintText: inputHintText,
-          onSendAudio: (audioFile, duration) {
-            controller.sendAudio(audioFile.path, duration);
-          },
-          onSendText: (text) {
-            controller.sendText(text, onSendMessage: onMessage);
-          },
-          onAttachmentClick: () {
-            showModalBottomSheet(
-              context: context,
-              builder: (context) => MediaSelectionSheet(controller: controller),
-            );
-          },
-        ),
+        Obx(() => chat_input.InputWidget(
+              hintText: inputHintText,
+              showMicOverride:
+                  controller.currentChatMessage.value?.medias?.isEmpty ?? true,
+              onSendAudio: (audioFile, duration) {
+                controller.sendAudio(audioFile.path, duration);
+              },
+              onSendText: (text) {
+                controller.sendText(text, onSendMessage: onMessage);
+              },
+              onAttachmentClick: () {
+                showModalBottomSheet(
+                  context: context,
+                  builder: (context) =>
+                      MediaSelectionSheet(controller: controller),
+                );
+              },
+            )),
       ],
     );
   }

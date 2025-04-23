@@ -19,6 +19,7 @@ class MediaExample extends StatelessWidget {
         return DashChatMedia(
           currentUser: controller.currentUser.value!,
           readOnly: true,
+          inputHintText: 'Type a message...',
           onMessage: (ChatMessage message) {
             controller.addFinalMessage(message);
             print('New message: ${message.text}');

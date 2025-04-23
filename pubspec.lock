@@ -157,8 +157,8 @@ packages:
     dependency: "direct main"
     description:
       path: "."
-      ref: "2ba9180"
-      resolved-ref: "2ba9180562a1a2eee60c2e5cca6193b60a4a5813"
+      ref: "9c99e2b"
+      resolved-ref: "9c99e2b9838542a9b15a18ddb9e4dd14a38381b3"
       url: "https://github.com/michameiu/chat_input.git"
     source: git
     version: "0.0.6"

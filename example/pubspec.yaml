@@ -43,7 +43,7 @@ dependency_overrides:
   chat_input:
     git:
       url: https://github.com/michameiu/chat_input.git
-      ref: "2ba9180"
+      ref: "001ef0b"
 
 dev_dependencies:
   flutter_lints: ^2.0.0
