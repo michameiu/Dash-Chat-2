@@ -8,6 +8,7 @@ import 'package:examples/samples/send_on_enter.dart';
 import 'package:examples/samples/theming.dart';
 import 'package:examples/samples/message_input.dart';
 import 'package:examples/samples/typing_users_sample.dart';
+import 'package:examples/samples/media_uploader_example.dart';
 import 'package:flutter/material.dart';
 
 void main() {
@@ -83,6 +84,10 @@ class MyHomePageState extends State<MyHomePage> {
             ElevatedButton(
               onPressed: () => push(ThemeSample()),
               child: const Text('Theming'),
+            ),
+            ElevatedButton(
+              onPressed: () => push(MediaUploaderExample()),
+              child: const Text('Media Uploader'),
             ),
           ],
         ),

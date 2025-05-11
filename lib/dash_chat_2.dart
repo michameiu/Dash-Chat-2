@@ -68,3 +68,4 @@ part 'src/dash_chat_media/dash_chat_media.dart';
 part 'src/dash_chat_media/media_preview.dart';
 part 'src/dash_chat_media/media_selection_sheet.dart';
 part 'src/dash_chat_media/camera_view.dart';
+part 'src/widgets/media_uploader.dart';
