@@ -57,8 +57,10 @@ class VideoPlayerState extends State<VideoPlayer> {
     return _controller.value.isInitialized
         ? Container(
             color: widget.containerColor ?? Colors.black,
-            child: ClipRect(
+            child: AspectRatio(
+              aspectRatio: widget.aspectRatio,
               child: Stack(
+                fit: StackFit.expand,
                 alignment: _controller.value.isPlaying
                     ? (widget.alignmentPlaying ??
                         AlignmentDirectional.bottomStart)
@@ -84,7 +86,6 @@ class VideoPlayerState extends State<VideoPlayer> {
                           ? Icons.pause
                           : Icons.play_arrow,
                       color: Colors.white,
-                      // size: 60,
                     ),
                   ),
                 ],
