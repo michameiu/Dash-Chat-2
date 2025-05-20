@@ -7,6 +7,8 @@ class VideoPlayer extends StatefulWidget {
     this.aspectRatio = 1,
     this.canPlay = true,
     this.containerColor,
+    this.alignmentPlaying,
+    this.alignmentPaused,
     Key? key,
   }) : super(key: key);
 
@@ -19,6 +21,12 @@ class VideoPlayer extends StatefulWidget {
 
   /// If the video can be played
   final bool canPlay;
+
+  /// Alignment for play/pause button when video is playing
+  final AlignmentGeometry? alignmentPlaying;
+
+  /// Alignment for play/pause button when video is paused
+  final AlignmentGeometry? alignmentPaused;
 
   @override
   State<VideoPlayer> createState() => VideoPlayerState();
@@ -51,8 +59,9 @@ class VideoPlayerState extends State<VideoPlayer> {
             color: widget.containerColor ?? Colors.black,
             child: Stack(
               alignment: _controller.value.isPlaying
-                  ? AlignmentDirectional.bottomStart
-                  : AlignmentDirectional.center,
+                  ? (widget.alignmentPlaying ??
+                      AlignmentDirectional.bottomStart)
+                  : (widget.alignmentPaused ?? AlignmentDirectional.center),
               children: <Widget>[
                 AspectRatio(
                   aspectRatio: _controller.value.aspectRatio,
