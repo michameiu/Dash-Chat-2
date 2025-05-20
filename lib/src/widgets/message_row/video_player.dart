@@ -11,6 +11,7 @@ class VideoPlayer extends StatefulWidget {
 
   /// Link of the video
   final String url;
+  final Color? containerColor;
 
   /// The Aspect Ratio of the Video. Important to get the correct size of the video
   final double aspectRatio;
@@ -46,7 +47,7 @@ class VideoPlayerState extends State<VideoPlayer> {
   Widget build(BuildContext context) {
     return _controller.value.isInitialized
         ? Container(
-            color: Colors.black,
+            color: widget.containerColor ?? Colors.black,
             child: Stack(
               alignment: _controller.value.isPlaying
                   ? AlignmentDirectional.bottomStart
