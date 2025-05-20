@@ -6,6 +6,7 @@ class VideoPlayer extends StatefulWidget {
     required this.url,
     this.aspectRatio = 1,
     this.canPlay = true,
+    this.containerColor,
     Key? key,
   }) : super(key: key);
 
