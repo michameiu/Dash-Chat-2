@@ -106,7 +106,7 @@ class MediaSelectionSheet extends StatelessWidget {
         MaterialPageRoute(
           builder: (context) => CameraView(
             mediaController: controller,
-            onClose: () => Navigator.of(context).pop(),
+            onClose: ([String? _]) => Navigator.of(context).pop(_),
           ),
         ),
       );

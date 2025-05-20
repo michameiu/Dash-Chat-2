@@ -27,7 +27,7 @@ Future<RecordingData> _handleVideoRecordingInIsolate(String videoPath) async {
 
 class CameraView extends StatefulWidget {
   final MediaController mediaController;
-  final Function() onClose;
+  final void Function([String? videoPath]) onClose;
 
   const CameraView({
     Key? key,
@@ -48,6 +48,7 @@ class _CameraViewState extends State<CameraView> {
     cameraController = CameraViewController(
       mediaController: widget.mediaController,
       closeCallback: widget.onClose,
+      context: context,
     );
     Get.put(cameraController);
   }
@@ -137,7 +138,7 @@ class _CameraViewState extends State<CameraView> {
               color: Colors.white,
               size: 28,
             ),
-            onPressed: widget.onClose,
+            onPressed: () => widget.onClose(null),
           ),
         ),
       ],
@@ -147,7 +148,8 @@ class _CameraViewState extends State<CameraView> {
 
 class CameraViewController extends GetxController {
   final MediaController mediaController;
-  final Function() closeCallback;
+  final void Function([String? videoPath]) closeCallback;
+  final BuildContext context;
 
   final Rx<CameraController?> cameraController = Rx<CameraController?>(null);
   final RxBool isRecording = false.obs;
@@ -159,6 +161,7 @@ class CameraViewController extends GetxController {
   CameraViewController({
     required this.mediaController,
     required this.closeCallback,
+    required this.context,
   });
 
   @override
@@ -293,7 +296,8 @@ class CameraViewController extends GetxController {
                 fileName: path.basename(result.videoPath),
               ),
             );
-            closeCallback();
+            Navigator.of(context).pop(result.videoPath);
+            closeCallback(result.videoPath);
           } else {
             errorMessage.value = 'Failed to process video recording';
           }

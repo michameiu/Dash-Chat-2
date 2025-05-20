@@ -106,15 +106,20 @@ class MediaUploader extends StatelessWidget {
 
   Future<void> _pickVideo(BuildContext context) async {
     if (await _checkAndRequestPermissions(context)) {
-      final ImagePicker picker = ImagePicker();
-      final XFile? video = await picker.pickVideo(
-        source: ImageSource.camera,
+      final mediaController = Get.find<MediaController>();
+      final videoPath = await Navigator.of(context).push<String>(
+        MaterialPageRoute(
+          builder: (context) => CameraView(
+            mediaController: mediaController,
+            onClose: ([String? _]) => Navigator.of(context).pop(_),
+          ),
+        ),
       );
-      if (video != null) {
+      if (videoPath != null && videoPath.isNotEmpty) {
         onMediaSelected(ChatMedia(
           type: MediaType.video,
-          url: video.path,
-          fileName: video.name,
+          url: videoPath,
+          fileName: videoPath.split('/').last,
         ));
       }
     }
