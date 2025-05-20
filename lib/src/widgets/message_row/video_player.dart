@@ -57,36 +57,38 @@ class VideoPlayerState extends State<VideoPlayer> {
     return _controller.value.isInitialized
         ? Container(
             color: widget.containerColor ?? Colors.black,
-            child: Stack(
-              alignment: _controller.value.isPlaying
-                  ? (widget.alignmentPlaying ??
-                      AlignmentDirectional.bottomStart)
-                  : (widget.alignmentPaused ?? AlignmentDirectional.center),
-              children: <Widget>[
-                AspectRatio(
-                  aspectRatio: _controller.value.aspectRatio,
-                  child: vp.VideoPlayer(_controller),
-                ),
-                IconButton(
-                  iconSize: _controller.value.isPlaying ? 24 : 60,
-                  onPressed: widget.canPlay
-                      ? () {
-                          setState(() {
-                            _controller.value.isPlaying
-                                ? _controller.pause()
-                                : _controller.play();
-                          });
-                        }
-                      : null,
-                  icon: Icon(
-                    _controller.value.isPlaying
-                        ? Icons.pause
-                        : Icons.play_arrow,
-                    color: Colors.white,
-                    // size: 60,
+            child: ClipRect(
+              child: Stack(
+                alignment: _controller.value.isPlaying
+                    ? (widget.alignmentPlaying ??
+                        AlignmentDirectional.bottomStart)
+                    : (widget.alignmentPaused ?? AlignmentDirectional.center),
+                children: <Widget>[
+                  AspectRatio(
+                    aspectRatio: _controller.value.aspectRatio,
+                    child: vp.VideoPlayer(_controller),
                   ),
-                ),
-              ],
+                  IconButton(
+                    iconSize: _controller.value.isPlaying ? 24 : 60,
+                    onPressed: widget.canPlay
+                        ? () {
+                            setState(() {
+                              _controller.value.isPlaying
+                                  ? _controller.pause()
+                                  : _controller.play();
+                            });
+                          }
+                        : null,
+                    icon: Icon(
+                      _controller.value.isPlaying
+                          ? Icons.pause
+                          : Icons.play_arrow,
+                      color: Colors.white,
+                      // size: 60,
+                    ),
+                  ),
+                ],
+              ),
             ),
           )
         : Container(color: widget.containerColor ?? Colors.black);
