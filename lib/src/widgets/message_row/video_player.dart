@@ -58,7 +58,7 @@ class VideoPlayerState extends State<VideoPlayer> {
         ? Container(
             color: widget.containerColor ?? Colors.black,
             child: AspectRatio(
-              aspectRatio: widget.aspectRatio,
+              aspectRatio: _controller.value.aspectRatio,
               child: Stack(
                 fit: StackFit.expand,
                 alignment: _controller.value.isPlaying
