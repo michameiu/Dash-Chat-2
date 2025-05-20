@@ -170,7 +170,7 @@ class MediaUploader extends StatelessWidget {
                       final path = await audioController.stopRecording();
                       if (path != null) {
                         onMediaSelected(ChatMedia(
-                          type: MediaType.file,
+                          type: MediaType.audio,
                           url: path,
                           fileName: path.split('/').last,
                         ));
