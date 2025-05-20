@@ -21,6 +21,8 @@ import 'package:permission_handler/permission_handler.dart';
 import 'package:device_info_plus/device_info_plus.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:chat_input/chat_input.dart' as chat_input;
+import 'package:record/record.dart';
+import 'dart:async';
 
 import 'src/helpers/link_helper.dart';
 import 'src/widgets/image_provider/image_provider.dart';
@@ -69,3 +71,55 @@ part 'src/dash_chat_media/media_preview.dart';
 part 'src/dash_chat_media/media_selection_sheet.dart';
 part 'src/dash_chat_media/camera_view.dart';
 part 'src/widgets/media_uploader.dart';
+
+class _AudioRecorderController extends GetxController {
+  final isRecording = false.obs;
+  final timer = 0.obs;
+  String? filePath;
+  AudioRecorder? _recorder;
+  Timer? _timer;
+
+  @override
+  void onInit() {
+    super.onInit();
+    _recorder = AudioRecorder();
+  }
+
+  Future<void> startRecording() async {
+    if (await _recorder!.hasPermission()) {
+      final dir = await getTemporaryDirectory();
+      filePath =
+          '${dir.path}/audio_${DateTime.now().millisecondsSinceEpoch}.m4a';
+      await _recorder!.start(const RecordConfig(), path: filePath!);
+      isRecording.value = true;
+      timer.value = 0;
+      _timer = Timer.periodic(const Duration(seconds: 1), (_) => timer.value++);
+    }
+  }
+
+  Future<String?> stopRecording() async {
+    _timer?.cancel();
+    isRecording.value = false;
+    final path = await _recorder!.stop();
+    return path;
+  }
+
+  void cancelRecording() async {
+    _timer?.cancel();
+    isRecording.value = false;
+    _recorder?.cancel();
+  }
+
+  @override
+  void onClose() {
+    _timer?.cancel();
+    _recorder?.dispose();
+    super.onClose();
+  }
+}
+
+String _formatDuration(int seconds) {
+  final m = (seconds ~/ 60).toString().padLeft(2, '0');
+  final s = (seconds % 60).toString().padLeft(2, '0');
+  return '$m:$s';
+}

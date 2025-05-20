@@ -111,7 +111,9 @@ class MediaUploader extends StatelessWidget {
         MaterialPageRoute(
           builder: (context) => CameraView(
             mediaController: mediaController,
-            onClose: ([String? _]) => Navigator.of(context).pop(_),
+            onClose: ([String? _]) {
+              // Navigator.of(context).pop(_);
+            },
           ),
         ),
       );
@@ -138,11 +140,56 @@ class MediaUploader extends StatelessWidget {
     }
   }
 
-  // Placeholder for mic/audio recording
   void _onMicPressed(BuildContext context) {
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(content: Text('Audio recording not implemented.')),
-    );
+    final audioController = Get.put(_AudioRecorderController());
+    if (!audioController.isRecording.value) {
+      audioController.startRecording();
+      showDialog(
+        context: context,
+        barrierDismissible: false,
+        builder: (ctx) {
+          return Obx(() => AlertDialog(
+                title: const Text('Recording...'),
+                content: Row(
+                  children: [
+                    const Icon(Icons.mic, color: Colors.red),
+                    const SizedBox(width: 8),
+                    Text(_formatDuration(audioController.timer.value)),
+                  ],
+                ),
+                actions: [
+                  TextButton(
+                    onPressed: () {
+                      audioController.cancelRecording();
+                      Navigator.of(ctx).pop();
+                    },
+                    child: const Text('Cancel'),
+                  ),
+                  TextButton(
+                    onPressed: () async {
+                      final path = await audioController.stopRecording();
+                      if (path != null) {
+                        onMediaSelected(ChatMedia(
+                          type: MediaType.file,
+                          url: path,
+                          fileName: path.split('/').last,
+                        ));
+                      }
+                      Navigator.of(ctx).pop();
+                    },
+                    child: const Text('Send'),
+                  ),
+                ],
+              ));
+        },
+      );
+    }
+  }
+
+  String _formatDuration(int seconds) {
+    final m = (seconds ~/ 60).toString().padLeft(2, '0');
+    final s = (seconds % 60).toString().padLeft(2, '0');
+    return '$m:$s';
   }
 
   @override

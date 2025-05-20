@@ -1,3 +1,4 @@
+import 'package:dash_chat_2/dash_chat_2.dart';
 import 'package:examples/samples/avatar.dart';
 import 'package:examples/samples/basic.dart';
 import 'package:examples/samples/media.dart';
@@ -10,8 +11,11 @@ import 'package:examples/samples/message_input.dart';
 import 'package:examples/samples/typing_users_sample.dart';
 import 'package:examples/samples/media_uploader_example.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 
 void main() {
+  WidgetsFlutterBinding.ensureInitialized();
+  Get.lazyPut(() => MediaController());
   runApp(MyApp());
 }
 
