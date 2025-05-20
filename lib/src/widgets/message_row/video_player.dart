@@ -80,6 +80,6 @@ class VideoPlayerState extends State<VideoPlayer> {
               ],
             ),
           )
-        : Container(color: Colors.black);
+        : Container(color: widget.containerColor ?? Colors.black);
   }
 }
