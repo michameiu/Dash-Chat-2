@@ -131,11 +131,70 @@ class MediaUploader extends StatelessWidget {
     if (await _checkAndRequestPermissions(context)) {
       final FilePickerResult? result = await FilePicker.platform.pickFiles();
       if (result != null && result.files.single.path != null) {
-        onMediaSelected(ChatMedia(
-          type: MediaType.file,
-          url: result.files.single.path!,
-          fileName: result.files.single.name,
-        ));
+        final String fileName = result.files.single.name;
+        final String extension = fileName.split('.').last.toLowerCase();
+
+        // Define allowed extensions
+        const List<String> imageExtensions = [
+          'jpg',
+          'jpeg',
+          'png',
+          'gif',
+          'bmp',
+          'webp'
+        ];
+        const List<String> videoExtensions = [
+          'mp4',
+          'mov',
+          'avi',
+          'mkv',
+          'wmv',
+          'flv',
+          '3gp'
+        ];
+        const List<String> audioExtensions = [
+          'mp3',
+          'wav',
+          'aac',
+          'm4a',
+          'ogg',
+          'flac'
+        ];
+
+        MediaType? mediaType;
+        if (imageExtensions.contains(extension)) {
+          mediaType = MediaType.image;
+        } else if (videoExtensions.contains(extension)) {
+          mediaType = MediaType.video;
+        } else if (audioExtensions.contains(extension)) {
+          mediaType = MediaType.audio;
+        }
+
+        if (mediaType != null) {
+          onMediaSelected(ChatMedia(
+            type: mediaType,
+            url: result.files.single.path!,
+            fileName: fileName,
+          ));
+        } else {
+          // Show error dialog for unsupported file types
+          if (context.mounted) {
+            showDialog(
+              context: context,
+              builder: (context) => AlertDialog(
+                title: const Text('Unsupported File Type'),
+                content:
+                    const Text('Please select an image, video, or audio file.'),
+                actions: [
+                  TextButton(
+                    onPressed: () => Navigator.pop(context),
+                    child: const Text('OK'),
+                  ),
+                ],
+              ),
+            );
+          }
+        }
       }
     }
   }
