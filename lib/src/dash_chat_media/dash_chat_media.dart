@@ -11,6 +11,8 @@ class DashChatMedia extends StatelessWidget {
   final QuickReplyOptions quickReplyOptions;
   final MessageListOptions messageListOptions;
   final String inputHintText;
+  final Widget Function(MediaController controller)? mediaPreviewBuilder;
+  final Widget Function(MediaController controller)? inputBuilder;
 
   const DashChatMedia({
     Key? key,
@@ -24,6 +26,8 @@ class DashChatMedia extends StatelessWidget {
     this.inputHintText = 'Flag an issue',
     this.messageListOptions = const MessageListOptions(),
     this.typingUsers,
+    this.mediaPreviewBuilder,
+    this.inputBuilder,
   }) : super(key: key);
 
   @override
@@ -128,25 +132,28 @@ class DashChatMedia extends StatelessWidget {
             );
           }),
         ),
-        MediaPreview(controller: controller),
-        Obx(() => chat_input.InputWidget(
-              hintText: inputHintText,
-              showMicOverride:
-                  controller.currentChatMessage.value?.medias?.isEmpty ?? true,
-              onSendAudio: (audioFile, duration) {
-                controller.sendAudio(audioFile.path, duration);
-              },
-              onSendText: (text) {
-                controller.sendText(text, onSendMessage: onMessage);
-              },
-              onAttachmentClick: () {
-                showModalBottomSheet(
-                  context: context,
-                  builder: (context) =>
-                      MediaSelectionSheet(controller: controller),
-                );
-              },
-            )),
+        mediaPreviewBuilder?.call(controller) ??
+            MediaPreview(controller: controller),
+        inputBuilder?.call(controller) ??
+            Obx(() => chat_input.InputWidget(
+                  hintText: inputHintText,
+                  showMicOverride:
+                      controller.currentChatMessage.value?.medias?.isEmpty ??
+                          true,
+                  onSendAudio: (audioFile, duration) {
+                    controller.sendAudio(audioFile.path, duration);
+                  },
+                  onSendText: (text) {
+                    controller.sendText(text, onSendMessage: onMessage);
+                  },
+                  onAttachmentClick: () {
+                    showModalBottomSheet(
+                      context: context,
+                      builder: (context) =>
+                          MediaSelectionSheet(controller: controller),
+                    );
+                  },
+                )),
       ],
     );
   }

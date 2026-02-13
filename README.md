@@ -137,6 +137,115 @@ class MediaExample extends StatelessWidget {
 }
 ```
 
+## Custom Builders
+
+`DashChatMedia` exposes two optional builder callbacks that let you replace the default media preview bar and input bar with your own widgets. Both receive a `MediaController` instance so you can drive all chat/media logic from your custom UI.
+
+### mediaPreviewBuilder
+
+Replaces the built-in media preview strip that shows pending attachments.
+
+**Signature:** `Widget Function(MediaController controller)?`
+
+> **Note:** Because `mediaPreviewBuilder` is called once (not inside an `Obx`), you must wrap any reactive reads in `Obx()` yourself.
+
+```dart
+DashChatMedia(
+  currentUser: user,
+  onMessage: (msg) => print(msg.text),
+  mediaPreviewBuilder: (controller) {
+    return Obx(() {
+      final message = controller.currentChatMessage.value;
+      if (message?.medias == null || message!.medias!.isEmpty) {
+        return const SizedBox.shrink();
+      }
+      return SizedBox(
+        height: 80,
+        child: ListView.builder(
+          scrollDirection: Axis.horizontal,
+          itemCount: message.medias!.length,
+          itemBuilder: (context, index) {
+            final media = message.medias![index];
+            return Stack(
+              children: [
+                Padding(
+                  padding: const EdgeInsets.all(4),
+                  child: Image.network(media.url, width: 60, height: 60, fit: BoxFit.cover),
+                ),
+                Positioned(
+                  top: 0,
+                  right: 0,
+                  child: GestureDetector(
+                    onTap: () => controller.removeMedia(index),
+                    child: const Icon(Icons.close, size: 16),
+                  ),
+                ),
+              ],
+            );
+          },
+        ),
+      );
+    });
+  },
+)
+```
+
+### inputBuilder
+
+Replaces the built-in input bar (text field, send button, attachment button).
+
+**Signature:** `Widget Function(MediaController controller)?`
+
+> **Note:** When using `inputBuilder`, you are responsible for handling your own send logic, text field state, and attachment triggering.
+
+```dart
+DashChatMedia(
+  currentUser: user,
+  onMessage: onMessage,
+  inputBuilder: (controller) {
+    final textController = TextEditingController();
+    return Row(
+      children: [
+        IconButton(
+          icon: const Icon(Icons.attach_file),
+          onPressed: () => controller.addMediaToCurrentMessage(
+            ChatMedia(url: 'https://example.com/photo.jpg', type: MediaType.image, fileName: 'photo.jpg'),
+          ),
+        ),
+        Expanded(
+          child: TextField(
+            controller: textController,
+            decoration: const InputDecoration(hintText: 'Type a message...'),
+          ),
+        ),
+        IconButton(
+          icon: const Icon(Icons.send),
+          onPressed: () {
+            controller.sendText(textController.text, onSendMessage: onMessage);
+            textController.clear();
+          },
+        ),
+      ],
+    );
+  },
+)
+```
+
+### MediaController API Reference
+
+Both builders receive a `MediaController`. Key properties and methods:
+
+| Member | Description |
+|--------|-------------|
+| `currentChatMessage` (`Rxn<ChatMessage>`) | The pending message with attached media. Observable — wrap reads in `Obx()`. |
+| `messages` (`RxList<ChatMessage>`) | The observable list of all chat messages. |
+| `currentUser` (`Rxn<ChatUser>`) | The current chat user. |
+| `sendText(String text, {Function(ChatMessage)? onSendMessage})` | Send a text message (with any pending media). |
+| `sendAudio(String path, Duration duration)` | Attach and send an audio file. |
+| `addMediaToCurrentMessage(ChatMedia media)` | Attach a media item to the pending message. |
+| `removeMedia(int index)` | Remove a media item by index from the pending message. |
+| `clearMedia()` | Clear all pending media. |
+
 You can run the [example](example) project to see more complex ways of using the package
 
 ## Parameters of DashChat
@@ -172,6 +281,10 @@ You can run the [example](example) project to see more complex ways of using the
 - <span style="color:#24292E; background-color:#F3F4F4; padding: .2em .4em;; border-radius: 6px;">MessageOptions? messageOptions</span> - <span style="color:#FFB23F">optional</span>: Options to customize the appearance of messages
 
 - <span style="color:#24292E; background-color:#F3F4F4; padding: .2em .4em;; border-radius: 6px;">InputOptions? inputOptions</span> - <span style="color:#FFB23F">optional</span>: Options to customize the appearance of the input field
+
+- <span style="color:#24292E; background-color:#F3F4F4; padding: .2em .4em;; border-radius: 6px;">Widget Function(MediaController)? mediaPreviewBuilder</span> - <span style="color:#FFB23F">optional</span>: Custom builder for the media preview bar. Receives MediaController. Defaults to the built-in MediaPreview widget.
+
+- <span style="color:#24292E; background-color:#F3F4F4; padding: .2em .4em;; border-radius: 6px;">Widget Function(MediaController)? inputBuilder</span> - <span style="color:#FFB23F">optional</span>: Custom builder for the input bar. Receives MediaController. Defaults to the built-in InputWidget.
 
 ## Full documentation
 
